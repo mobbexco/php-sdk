@@ -1,0 +1,31 @@
+{
+    "name": "adue/mobbex",
+    "description": "A package to use and access Mobbex API",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcio Fuentes",
+            "email": "marcio@adue.digital"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "^9.1",
+        "nunomaduro/phpinsights": "^1.14"
+    },
+    "require": {
+        "guzzlehttp/guzzle": "~6.0",
+        "rakit/validation": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Adue\\Mobbex\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
