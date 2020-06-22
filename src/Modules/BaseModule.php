@@ -122,11 +122,13 @@ class BaseModule
 
         $extraParams = [];
 
-        if($data['headers'] !== false)
-            $extraParams['headers'] = $data['headers'] ?? $this->getHeaders();
+        if(isset($data['headers']))
+            if($data['headers'] !== false)
+                $extraParams['headers'] = $data['headers'] ?? $this->getHeaders();
 
-        if($data['body'] !== false)
-            $extraParams['body'] = $data['body'] ?? $this->getRequestBody(true);
+        if(isset($data['body']))
+            if($data['body'] !== false)
+                $extraParams['body'] = $data['body'] ?? $this->getRequestBody(true);
 
         foreach ($data as $key => $value) {
             if(!in_array($key, ['headers', 'body']))

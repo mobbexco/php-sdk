@@ -27,7 +27,7 @@ class Checkout extends BaseModule implements ModuleInterface
     public function validate()
     {
 
-        $this->validateItems($this->attributes['items']);
+        $this->validateItems($this->items);
 
         return parent::validate();
 

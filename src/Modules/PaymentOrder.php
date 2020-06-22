@@ -28,11 +28,11 @@ class PaymentOrder extends BaseModule implements ModuleInterface
     public function validate()
     {
 
-        $this->validateDueDate($this->attributes['due']);
-        $this->validateSecondDue($this->attributes['secondDue']);
-        $this->validateActions($this->attributes['actions']);
-        $this->validateItems($this->attributes['items']);
-        $this->validateOptions($this->attributes['options']);
+        $this->validateDueDate($this->due);
+        $this->validateSecondDue($this->secondDue);
+        $this->validateActions($this->actions);
+        $this->validateItems($this->items);
+        $this->validateOptions($this->options);
 
         return parent::validate();
 
