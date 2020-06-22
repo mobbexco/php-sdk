@@ -11,7 +11,7 @@ trait DynamicAttributes
 
     public function __get($name)
     {
-        return $this->attributes[$name] ?? NULL;
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public function __set($name, $value)
