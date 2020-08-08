@@ -11,6 +11,7 @@ class Operation extends BaseModule implements ModuleInterface
 
     protected $uri = 'operations/';
     protected $validationRules = [
+
     ];
 
     public function filter()

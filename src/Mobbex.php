@@ -11,9 +11,12 @@ use Adue\Mobbex\Modules\PaymentOrder;
 use Adue\Mobbex\Modules\Sources;
 use Adue\Mobbex\Modules\Subscription;
 use Adue\Mobbex\Modules\Transaction;
+use Adue\Mobbex\Traits\TransactionStatesTrait;
 
 class Mobbex
 {
+    use TransactionStatesTrait;
+
     private $apiKey;
     private $accessToken;
 
