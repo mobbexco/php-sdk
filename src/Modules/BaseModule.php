@@ -36,7 +36,7 @@ class BaseModule
     public function getHeaders()
     {
         return [
-            'cache-control' => 'no-cache',
+            //'cache-control' => 'no-cache',
             'Content-Type' => 'application/json',
             'x-lang' => 'es',
             'x-access-token' => $this->mobbex->getAccessToken(),
@@ -118,6 +118,9 @@ class BaseModule
 
         $client = new Client([
             'base_uri' => $requestData['baseUrl'],
+            'defaults' => [
+                'exceptions' => false
+            ]
         ]);
 
         $extraParams = [];

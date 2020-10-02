@@ -28,13 +28,13 @@ class PaymentOrder extends BaseModule implements ModuleInterface
     public function validate()
     {
 
+        parent::validate();
+
         $this->validateDueDate($this->due);
         $this->validateSecondDue($this->secondDue);
         $this->validateActions($this->actions);
         $this->validateItems($this->items);
-        $this->validateOptions($this->options);
-
-        return parent::validate();
+        return $this->validateOptions($this->options);
 
     }
 
@@ -54,6 +54,9 @@ class PaymentOrder extends BaseModule implements ModuleInterface
             'date' => 'date:Y-m-d'
         ]);
 
+        if($validation->fails())
+            throw new InvalidDataException(serialize(['Invalid data']));
+
         return !$validation->fails();
     }
 
@@ -72,6 +75,9 @@ class PaymentOrder extends BaseModule implements ModuleInterface
             'surcharge' => 'numeric',
         ]);
 
+        if($validation->fails())
+            throw new InvalidDataException(serialize(['Invalid data']));
+
         return !$validation->fails();
     }
 
@@ -85,6 +91,9 @@ class PaymentOrder extends BaseModule implements ModuleInterface
             'url' => 'url',
         ]);
 
+        if($validation->fails())
+            throw new InvalidDataException(serialize(['Invalid data']));
+
         return !$validation->fails();
     }
 
@@ -97,6 +106,9 @@ class PaymentOrder extends BaseModule implements ModuleInterface
         $validation = $validator->validate($options, [
             'smsMessage' => 'max:140',
         ]);
+
+        if($validation->fails())
+            throw new InvalidDataException(serialize(['Invalid data']));
 
         return !$validation->fails();
     }

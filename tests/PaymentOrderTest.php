@@ -4,6 +4,7 @@
 namespace Tests;
 
 
+use Adue\Mobbex\Exceptions\InvalidDataException;
 use Adue\Mobbex\MobbexResponse;
 use Adue\Mobbex\Modules\PaymentOrder;
 
@@ -67,6 +68,36 @@ class PaymentOrderTest extends BaseTestCase
         $this->assertTrue($responseBody['result']);
     }
 
-    //TODO test payment order with wrong data
+    public function test_payment_order_fail_with_wrong_optional_data()
+    {
+        $this->expectException(
+            InvalidDataException::class
+        );
+
+        $mobbex = $this->getDefaultObject();
+
+        $mobbex->paymentOrder->total = 150.00;
+        $mobbex->paymentOrder->description = 'Descripción de venta $150';
+        $mobbex->paymentOrder->due = [
+            'day' => 01,
+            'month' => 01,
+            'year' => 2021,
+        ];
+        $mobbex->paymentOrder->actions = [
+            [
+                "icon" => "attachment",
+                "title"  => "Factura",
+                "url" => "https://speryans.com/mifactura/123"
+            ]
+        ];
+        $mobbex->paymentOrder->reference = "mi_referencia_123";
+        $mobbex->paymentOrder->webhook = "http://webhook.com";
+
+        //Wrong Data
+        $mobbex->paymentOrder->email = 123456;
+        $mobbex->paymentOrder->actions = 'anything';
+
+        $response = $mobbex->paymentOrder->save();
+    }
 
 }

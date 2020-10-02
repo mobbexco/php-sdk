@@ -105,6 +105,26 @@ class CheckoutTest extends BaseTestCase
 
     }
 
+    public function test_checkout_cant_execute_with_optionaldata()
+    {
+        $this->expectException(
+            InvalidDataException::class
+        );
+
+        $mobbex = $this->getDefaultObject();
+
+        //Obligatorios
+        $mobbex->checkout->total = 150.00;
+        $mobbex->checkout->currency = 'ARS';
+        $mobbex->checkout->description = 'Descripción de venta $150';
+
+        $mobbex->checkout->webhook = 123456;
+        $mobbex->checkout->redirect = 123456;
+
+        $response = $mobbex->checkout->save();
+
+    }
+
     //TODO Test Split checkout
-    //TODO Test Gwrong Optional Data
+
 }
