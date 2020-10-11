@@ -13,10 +13,10 @@ class Subscription extends BaseModule implements ModuleInterface
     protected $validationRules = [
     ];
 
-    public function activate($id)
+    public function activate($id = false)
     {
 
-        $this->validate();
+        $id = !$id ? $this->uid : $id;
 
         $response = $this->makeRequest([
             'method' => 'GET',
@@ -28,10 +28,10 @@ class Subscription extends BaseModule implements ModuleInterface
 
     }
 
-    public function delete($id)
+    public function delete($id = false)
     {
 
-        $this->validate();
+        $id = !$id ? $this->uid : $id;
 
         $response = $this->makeRequest([
             'method' => 'GET',
@@ -39,14 +39,14 @@ class Subscription extends BaseModule implements ModuleInterface
             'uri' => $this->uri . '/' . $id . '/action/delete'
         ]);
 
+        $this->attributes = [];
+
         return (new MobbexResponse($response))->getBody();
 
     }
 
     public function subscribers($id)
     {
-        $this->validate();
-
         $response = $this->makeRequest([
             'method' => 'GET',
             'body' => false,
@@ -56,52 +56,6 @@ class Subscription extends BaseModule implements ModuleInterface
         return (new MobbexResponse($response))->getBody();
     }
 
-    public function createSubscriber($subscriber, $id)
-    {
 
-        $response = $this->makeRequest([
-            'method' => 'POST',
-            'body' => json_encode($subscriber),
-            'uri' => $this->uri . '/' . $id . '/subscriber'
-        ]);
-
-        return (new MobbexResponse($response))->getBody();
-    }
-
-    public function editSubscriber($sid, $id, $data)
-    {
-
-        $response = $this->makeRequest([
-            'method' => 'POST',
-            'body' => json_encode($data),
-            'uri' => $this->uri . '/' . $id . '/subscriber/' . $sid
-        ]);
-
-        return (new MobbexResponse($response))->getBody();
-    }
-
-    public function suspendSubscriber($sid, $id)
-    {
-
-        $response = $this->makeRequest([
-            'method' => 'GET',
-            'body' => false,
-            'uri' => $this->uri . '/' . $id . '/subscriber/' . $sid . '/action/suspend'
-        ]);
-
-        return (new MobbexResponse($response))->getBody();
-    }
-
-    public function moveSubscriber($sid, $fromId, $toId)
-    {
-
-        $response = $this->makeRequest([
-            'method' => 'GET',
-            'body' => json_encode(['sid' => $toId]),
-            'uri' => $this->uri . '/' . $fromId . '/subscriber/' . $sid . '/action/move'
-        ]);
-
-        return (new MobbexResponse($response))->getBody();
-    }
 
 }

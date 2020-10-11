@@ -31,42 +31,115 @@ class SubscriptionsTest extends BaseTestCase
     {
         $mobbex = $this->getDefaultObject();
 
-        $response =  $mobbex->subscription->all();
+        $subscriptions =  $mobbex->subscription->all();
 
-        //TODO get all subscriptions
-        $this->assertTrue($response['result']);
+        $this->assertIsArray($subscriptions);
+
+        foreach ($subscriptions as $subscription)
+            $this->assertInstanceOf(Subscription::class, $subscription);
     }
 
     public function test_subscription_data()
     {
-        $id = 'AFRYsSQZW';
         $mobbex = $this->getDefaultObject();
+        $mobbex->subscription->total = 100;
+        $mobbex->subscription->currency = 'ARS';
+        $mobbex->subscription->type = 'dynamic';
+        $mobbex->subscription->name = 'Suscription name';
+        $mobbex->subscription->description = 'Suscription description';
+        $mobbex->subscription->interval = '1m';
+        $mobbex->subscription->trial = 0;
+        $mobbex->subscription->limit = 0;
+        $mobbex->subscription->webhook = 'https://webhook.com';
+        $mobbex->subscription->return_url = 'https://returnurl.com';
 
-        $response =  $mobbex->subscription->get($id);
+        $mobbex->subscription->save();
 
-        //TODO test subscription data
-        $this->assertTrue($response['result']);
+        $response =  $mobbex->subscription->get($mobbex->subscription->uid);
+
+        $this->assertInstanceOf(Subscription::class, $response);
+        $this->assertTrue($response->uid == $mobbex->subscription->uid);
     }
 
     public function test_subscription_activation()
     {
-        $id = 'AFRYsSQZW';
         $mobbex = $this->getDefaultObject();
+        $mobbex->subscription->total = 100;
+        $mobbex->subscription->currency = 'ARS';
+        $mobbex->subscription->type = 'dynamic';
+        $mobbex->subscription->name = 'Suscription name';
+        $mobbex->subscription->description = 'Suscription description';
+        $mobbex->subscription->interval = '1m';
+        $mobbex->subscription->trial = 0;
+        $mobbex->subscription->limit = 0;
+        $mobbex->subscription->webhook = 'https://webhook.com';
+        $mobbex->subscription->return_url = 'https://returnurl.com';
 
-        $response =  $mobbex->subscription->activate($id);
+        $mobbex->subscription->save();
 
-        //TODO test subscription activation
+        $response =  $mobbex->subscription->activate();
         $this->assertTrue($response['result']);
+
+        $updatedSubscription = $mobbex->subscription->get($mobbex->subscription->uid);
+        $this->assertTrue($updatedSubscription->status == 'active');
     }
 
     public function test_subscription_delete()
     {
-        $id = 'AFRYsSQZW';
         $mobbex = $this->getDefaultObject();
+        $mobbex->subscription->total = 100;
+        $mobbex->subscription->currency = 'ARS';
+        $mobbex->subscription->type = 'dynamic';
+        $mobbex->subscription->name = 'Suscription name';
+        $mobbex->subscription->description = 'Suscription description';
+        $mobbex->subscription->interval = '1m';
+        $mobbex->subscription->trial = 0;
+        $mobbex->subscription->limit = 0;
+        $mobbex->subscription->webhook = 'https://webhook.com';
+        $mobbex->subscription->return_url = 'https://returnurl.com';
 
-        $response = $mobbex->subscription->delete($id);
+        $mobbex->subscription->save();
 
-        //TODO test subscription activation
+        $id = $mobbex->subscription->uid;
+
+        $response = $mobbex->subscription->delete();
+        $this->assertTrue($response['result']);
+
+        $subscription = $mobbex->subscription->get($id);
+        $this->assertTrue($subscription->status == 'deleted');
+    }
+
+    public function test_subscription_create_subscriber()
+    {
+        $mobbex = $this->getDefaultObject();
+        $mobbex->subscription->total = 100;
+        $mobbex->subscription->currency = 'ARS';
+        $mobbex->subscription->type = 'dynamic';
+        $mobbex->subscription->name = 'Suscription name';
+        $mobbex->subscription->description = 'Suscription description';
+        $mobbex->subscription->interval = '1m';
+        $mobbex->subscription->trial = 0;
+        $mobbex->subscription->limit = 0;
+        $mobbex->subscription->webhook = 'https://webhook.com';
+        $mobbex->subscription->return_url = 'https://returnurl.com';
+
+        $mobbex->subscription->save();
+
+        $mobbex->subscription->createSubscriber([
+            'customer' => [
+                'email' => 'customer@email.com',
+                'identification' => '36666666',
+                'name' => 'Customer Test',
+                'phone' => '12345678',
+            ],
+            'reference' => 'demo_user_321',
+            'startDate' => [
+                'day' => 1,
+                'month' => 1,
+            ]
+        ]);
+
+        //TODO test create subscriber
         $this->assertTrue($response['result']);
     }
 
@@ -77,16 +150,10 @@ class SubscriptionsTest extends BaseTestCase
 
         $response =  $mobbex->subscription->subscribers($id);
 
+        var_dump($response);
+        exit;
+
         //TODO test subscription subscribers
-        $this->assertTrue($response['result']);
-    }
-
-    public function test_subscription_create_subscriber()
-    {
-        $subscription = $this->createSubscription();
-        $response = $this->createSubscriber($subscription['data']['uid']);
-
-        //TODO test create subscriber
         $this->assertTrue($response['result']);
     }
 
@@ -160,9 +227,10 @@ class SubscriptionsTest extends BaseTestCase
     /**
      * @return mixed
      */
-    private function createSubscription()
+    private function createSubscription($mobbex = false)
     {
-        $mobbex = $this->getDefaultObject();
+        if(!$mobbex)
+            $mobbex = $this->getDefaultObject();
 
         $mobbex->subscription->total = 100;
         $mobbex->subscription->currency = 'ARS';
@@ -175,8 +243,7 @@ class SubscriptionsTest extends BaseTestCase
         $mobbex->subscription->webhook = 'https://webhook.com';
         $mobbex->subscription->return_url = 'https://returnurl.com';
 
-        $subscription = $mobbex->subscription->save();
-        return $subscription;
+        return $mobbex->subscription->save();
     }
 
     private function createSubscriber($id)

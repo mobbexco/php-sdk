@@ -23,12 +23,16 @@ class OperationsTest extends BaseTestCase
     {
         $mobbex = $this->getDefaultObject();
 
-        $mobbex->operation->page = 1;
-        $mobbex->operation->limit = 20;
-        $response = $mobbex->operation->filter();
+        $operations = $mobbex->operation->filter([
+            'page' => 1,
+            'limit' => 20,
+        ]);
 
-        //TODO test if there are some operations
-        $this->assertTrue($response['result']);
+        $this->assertIsArray($operations);
+
+        foreach ($operations as $operation)
+            $this->assertInstanceOf(Operation::class, $operation);
+
     }
 
     //TODO test advanced transactions filters

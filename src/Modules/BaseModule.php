@@ -70,7 +70,12 @@ class BaseModule
             'method' => 'GET',
         ]);
 
-        return (new MobbexResponse($response))->getBody();
+        $body = (new MobbexResponse($response))->getBody();
+
+        if($body['result'])
+            return $this->createArrayOfObjects($body);
+
+        return $body['result'];
 
     }
 
@@ -82,7 +87,11 @@ class BaseModule
             'uri' => $this->uri . '/' . $id,
         ]);
 
-        return (new MobbexResponse($response))->getBody();
+        $mbbxResponse = (new MobbexResponse($response))->getBody();
+
+        $this->selfAssignData($mbbxResponse);
+
+        return $this;
 
     }
 
@@ -165,4 +174,15 @@ class BaseModule
         }
     }
 
+    protected function createArrayOfObjects($body)
+    {
+        $className = \get_class($this);
+        foreach ($body['data']['docs'] as $op) {
+            $operation = new $className($this->mobbex);
+            foreach ($op as $key => $value)
+                $operation->{$key} = $value;
+            $array[] = $operation;
+        }
+        return $array;
+    }
 }

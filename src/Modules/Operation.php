@@ -3,7 +3,6 @@
 
 namespace Adue\Mobbex\Modules;
 
-
 use Adue\Mobbex\MobbexResponse;
 
 class Operation extends BaseModule implements ModuleInterface
@@ -14,19 +13,22 @@ class Operation extends BaseModule implements ModuleInterface
 
     ];
 
-    public function filter()
+    public function filter($args = [])
     {
 
         $response = $this->makeRequest([
             'method' => 'GET',
-            'uri' => $this->uri . '?' . http_build_query([
-                    'page' => $this->page,
-                    'limit' => $this->limit,
-                ])
+            'uri' => $this->uri . '?' . http_build_query($args)
         ]);
 
-        return (new MobbexResponse($response))->getBody();
+        $body = (new MobbexResponse($response))->getBody();
+
+        if($body['result'])
+            return $this->createArrayOfObjects($body);
+
+        return $body['result'];
     }
+
 
     public function refund($id)
     {
