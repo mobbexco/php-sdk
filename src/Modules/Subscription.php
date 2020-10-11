@@ -24,7 +24,7 @@ class Subscription extends BaseModule implements ModuleInterface
             'uri' => $this->uri . '/' . $id . '/action/activate'
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
 
     }
 
@@ -39,7 +39,7 @@ class Subscription extends BaseModule implements ModuleInterface
             'uri' => $this->uri . '/' . $id . '/action/delete'
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
 
     }
 
@@ -53,7 +53,7 @@ class Subscription extends BaseModule implements ModuleInterface
             'uri' => $this->uri . '/' . $id . '/subscriber'
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
     }
 
     public function createSubscriber($subscriber, $id)
@@ -65,7 +65,7 @@ class Subscription extends BaseModule implements ModuleInterface
             'uri' => $this->uri . '/' . $id . '/subscriber'
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
     }
 
     public function editSubscriber($sid, $id, $data)
@@ -77,7 +77,7 @@ class Subscription extends BaseModule implements ModuleInterface
             'uri' => $this->uri . '/' . $id . '/subscriber/' . $sid
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
     }
 
     public function suspendSubscriber($sid, $id)
@@ -89,7 +89,7 @@ class Subscription extends BaseModule implements ModuleInterface
             'uri' => $this->uri . '/' . $id . '/subscriber/' . $sid . '/action/suspend'
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
     }
 
     public function moveSubscriber($sid, $fromId, $toId)
@@ -101,7 +101,7 @@ class Subscription extends BaseModule implements ModuleInterface
             'uri' => $this->uri . '/' . $fromId . '/subscriber/' . $sid . '/action/move'
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
     }
 
 }

@@ -33,4 +33,12 @@ class Checkout extends BaseModule implements ModuleInterface
 
     }
 
+    public function getEmbeded($callbacks = [])
+    {
+        $html = file_get_contents(__DIR__.'/../../resources/views/checkout.php');
+        $html = str_replace('{ID Checkout}', $this->id, $html);
+
+        return $html;
+    }
+
 }

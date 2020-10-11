@@ -7,6 +7,7 @@ namespace Tests;
 use Adue\Mobbex\MobbexResponse;
 use Adue\Mobbex\Modules\Subscription;
 
+//TODO change UID and use the model in tests
 class SubscriptionsTest extends BaseTestCase
 {
 
@@ -21,28 +22,19 @@ class SubscriptionsTest extends BaseTestCase
 
     public function test_subscription_creation()
     {
-        $subscription = $this->createSubscription();
+        $response = $this->createSubscription();
 
-        $this->assertInstanceOf(MobbexResponse::class, $subscription);
-
-        $responseBody = $subscription->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscriptions_lists()
     {
         $mobbex = $this->getDefaultObject();
 
-        $subscriptions =  $mobbex->subscription->all();
+        $response =  $mobbex->subscription->all();
 
-        $responseBody = $subscriptions->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        //TODO get all subscriptions
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscription_data()
@@ -50,13 +42,10 @@ class SubscriptionsTest extends BaseTestCase
         $id = 'AFRYsSQZW';
         $mobbex = $this->getDefaultObject();
 
-        $subscription =  $mobbex->subscription->get($id);
+        $response =  $mobbex->subscription->get($id);
 
-        $responseBody = $subscription->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        //TODO test subscription data
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscription_activation()
@@ -64,13 +53,10 @@ class SubscriptionsTest extends BaseTestCase
         $id = 'AFRYsSQZW';
         $mobbex = $this->getDefaultObject();
 
-        $subscription =  $mobbex->subscription->activate($id);
+        $response =  $mobbex->subscription->activate($id);
 
-        $responseBody = $subscription->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        //TODO test subscription activation
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscription_delete()
@@ -78,13 +64,10 @@ class SubscriptionsTest extends BaseTestCase
         $id = 'AFRYsSQZW';
         $mobbex = $this->getDefaultObject();
 
-        $subscription =  $mobbex->subscription->delete($id);
+        $response = $mobbex->subscription->delete($id);
 
-        $responseBody = $subscription->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        //TODO test subscription activation
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscription_subscribers()
@@ -92,34 +75,28 @@ class SubscriptionsTest extends BaseTestCase
         $id = 'AFRYsSQZW';
         $mobbex = $this->getDefaultObject();
 
-        $subscription =  $mobbex->subscription->subscribers($id);
+        $response =  $mobbex->subscription->subscribers($id);
 
-        $responseBody = $subscription->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        //TODO test subscription subscribers
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscription_create_subscriber()
     {
         $subscription = $this->createSubscription();
-        $subscriber = $this->createSubscriber($subscription->getBody()['data']['uid']);
+        $response = $this->createSubscriber($subscription['data']['uid']);
 
-        $responseBody = $subscriber->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        //TODO test create subscriber
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscription_edit_subscriber()
     {
         $subscription = $this->createSubscription();
-        $subscriptionId = $subscription->getBody()['data']['uid'];
+        $subscriptionId = $subscription['data']['uid'];
 
         $subscriber = $this->createSubscriber($subscriptionId);
-        $subscriberId = $subscriber->getBody()['data']['uid'];
+        $subscriberId = $subscriber['data']['uid'];
 
         $mobbex = $this->getDefaultObject();
 
@@ -132,20 +109,17 @@ class SubscriptionsTest extends BaseTestCase
             ]
         );
 
-        $responseBody = $response->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        //TODO test create subscriber
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscription_suspend_subscriber()
     {
         $subscription = $this->createSubscription();
-        $subscriptionId = $subscription->getBody()['data']['uid'];
+        $subscriptionId = $subscription['data']['uid'];
 
         $subscriber = $this->createSubscriber($subscriptionId);
-        $subscriberId = $subscriber->getBody()['data']['uid'];
+        $subscriberId = $subscriber['data']['uid'];
 
         $mobbex = $this->getDefaultObject();
 
@@ -154,23 +128,19 @@ class SubscriptionsTest extends BaseTestCase
             $subscriptionId
         );
 
-        $responseBody = $response->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        $this->assertTrue($response['result']);
     }
 
     public function test_subscription_move_subscriber()
     {
         $subscription1 = $this->createSubscription();
-        $subscription1Id = $subscription1->getBody()['data']['uid'];
+        $subscription1Id = $subscription1['data']['uid'];
 
         $subscription2 = $this->createSubscription();
-        $subscription2Id = $subscription2->getBody()['data']['uid'];
+        $subscription2Id = $subscription2['data']['uid'];
 
         $subscriber = $this->createSubscriber($subscription1Id);
-        $subscriberId = $subscriber->getBody()['data']['uid'];
+        $subscriberId = $subscriber['data']['uid'];
 
         $mobbex = $this->getDefaultObject();
 
@@ -180,11 +150,8 @@ class SubscriptionsTest extends BaseTestCase
             $subscription2Id
         );
 
-        $responseBody = $response->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        //TODO test move subscriber
+        $this->assertTrue($response['result']);
     }
 
     /**

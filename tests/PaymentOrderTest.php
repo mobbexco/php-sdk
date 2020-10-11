@@ -29,12 +29,7 @@ class PaymentOrderTest extends BaseTestCase
 
         $response = $mobbex->paymentOrder->save();
 
-        $this->assertInstanceOf(MobbexResponse::class, $response);
-
-        $responseBody = $response->getBody();
-
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        $this->assertTrue($response['result']);
     }
 
     public function test_payment_order_execute_succesfully_with_optional_data()
@@ -60,12 +55,7 @@ class PaymentOrderTest extends BaseTestCase
 
         $response = $mobbex->paymentOrder->save();
 
-        $this->assertInstanceOf(MobbexResponse::class, $response);
-
-        $responseBody = $response->getBody();
-
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        $this->assertTrue($response['result']);
     }
 
     public function test_payment_order_fail_with_wrong_optional_data()

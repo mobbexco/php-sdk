@@ -70,7 +70,7 @@ class BaseModule
             'method' => 'GET',
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
 
     }
 
@@ -82,7 +82,7 @@ class BaseModule
             'uri' => $this->uri . '/' . $id,
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
 
     }
 
@@ -94,8 +94,11 @@ class BaseModule
             'method' => 'POST',
         ]);
 
-        return new MobbexResponse($response);
+        $mbbxResponse = (new MobbexResponse($response))->getBody();
 
+        $this->selfAssignData($mbbxResponse);
+
+        return $mbbxResponse;
     }
 
     /**
@@ -149,6 +152,17 @@ class BaseModule
             $requestData['uri'],
             $extraParams
         );
+    }
+
+    private function selfAssignData($body)
+    {
+
+        if(!$body['result'])
+            return false;
+
+        foreach ($body['data'] as $key => $value) {
+            $this->{$key} = $value;
+        }
     }
 
 }

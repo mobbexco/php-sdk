@@ -32,12 +32,7 @@ class CheckoutTest extends BaseTestCase
 
         $response = $mobbex->checkout->save();
 
-        $this->assertInstanceOf(MobbexResponse::class, $response);
-
-        $responseBody = $response->getBody();
-
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        $this->assertTrue($response['result']);
     }
 
     public function test_checkout_process_successfully_with_optional_data()
@@ -79,13 +74,7 @@ class CheckoutTest extends BaseTestCase
 
         $response = $mobbex->checkout->save();
 
-        $this->assertInstanceOf(MobbexResponse::class, $response);
-
-        $responseBody = $response->getBody();
-
-        $this->assertIsArray($responseBody);
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        $this->assertTrue($response['result']);
     }
 
     public function test_checkout_cant_execute_with_invalid_data()

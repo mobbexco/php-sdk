@@ -25,7 +25,7 @@ class Operation extends BaseModule implements ModuleInterface
                 ])
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
     }
 
     public function refund($id)
@@ -42,6 +42,6 @@ class Operation extends BaseModule implements ModuleInterface
             'uri' => $this->uri . $id . '/status'
         ]);
 
-        return new MobbexResponse($response);
+        return (new MobbexResponse($response))->getBody();
     }
 }
