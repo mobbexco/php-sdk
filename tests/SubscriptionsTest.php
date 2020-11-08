@@ -5,6 +5,7 @@ namespace Tests;
 
 
 use Adue\Mobbex\MobbexResponse;
+use Adue\Mobbex\Modules\Subscriber;
 use Adue\Mobbex\Modules\Subscription;
 
 //TODO change UID and use the model in tests
@@ -22,9 +23,10 @@ class SubscriptionsTest extends BaseTestCase
 
     public function test_subscription_creation()
     {
-        $response = $this->createSubscription();
+        $subscription = $this->createSubscription();
 
-        $this->assertTrue($response['result']);
+        $this->assertInstanceOf(Subscription::class, $subscription);
+        $this->assertNotNull($subscription->uid);
     }
 
     public function test_subscriptions_lists()
@@ -80,8 +82,7 @@ class SubscriptionsTest extends BaseTestCase
         $response =  $mobbex->subscription->activate();
         $this->assertTrue($response['result']);
 
-        $updatedSubscription = $mobbex->subscription->get($mobbex->subscription->uid);
-        $this->assertTrue($updatedSubscription->status == 'active');
+        $this->assertTrue($mobbex->subscription->status == 'active');
     }
 
     public function test_subscription_delete()
@@ -109,6 +110,25 @@ class SubscriptionsTest extends BaseTestCase
         $this->assertTrue($subscription->status == 'deleted');
     }
 
+    public function test_subscription_subscribers_instance()
+    {
+        $mobbex = $this->getDefaultObject();
+        $mobbex->subscription->total = 100;
+        $mobbex->subscription->currency = 'ARS';
+        $mobbex->subscription->type = 'dynamic';
+        $mobbex->subscription->name = 'Suscription name';
+        $mobbex->subscription->description = 'Suscription description';
+        $mobbex->subscription->interval = '1m';
+        $mobbex->subscription->trial = 0;
+        $mobbex->subscription->limit = 0;
+        $mobbex->subscription->webhook = 'https://webhook.com';
+        $mobbex->subscription->return_url = 'https://returnurl.com';
+
+        $mobbex->subscription->save();
+
+        $this->assertInstanceOf(Subscriber::class, $mobbex->subscription->subscribers);
+    }
+
     public function test_subscription_create_subscriber()
     {
         $mobbex = $this->getDefaultObject();
@@ -125,100 +145,113 @@ class SubscriptionsTest extends BaseTestCase
 
         $mobbex->subscription->save();
 
-        $mobbex->subscription->createSubscriber([
-            'customer' => [
+        $mobbex->subscription->activate();
+
+        $mobbex->subscription->subscribers->customer = [
                 'email' => 'customer@email.com',
                 'identification' => '36666666',
                 'name' => 'Customer Test',
                 'phone' => '12345678',
-            ],
-            'reference' => 'demo_user_321',
-            'startDate' => [
-                'day' => 1,
-                'month' => 1,
-            ]
-        ]);
+        ];
+        $mobbex->subscription->subscribers->reference = 'demo_user_321';
+        $mobbex->subscription->subscribers->startDate = [
+            'day' => 1,
+            'month' => 1,
+        ];
 
-        //TODO test create subscriber
-        $this->assertTrue($response['result']);
-    }
+        $mobbex->subscription->subscribers->save();
 
-    public function test_subscription_subscribers()
-    {
-        $id = 'AFRYsSQZW';
-        $mobbex = $this->getDefaultObject();
+        $this->assertInstanceOf(Subscriber::class, $mobbex->subscription->subscribers);
+        $this->assertNotNull($mobbex->subscription->subscribers->uid);
 
-        $response =  $mobbex->subscription->subscribers($id);
+        $subscriberList = $mobbex->subscription->subscribers->all();
 
-        var_dump($response);
-        exit;
-
-        //TODO test subscription subscribers
-        $this->assertTrue($response['result']);
+        $this->assertIsArray($subscriberList);
+        $this->assertTrue($subscriberList[0]->reference == 'demo_user_321');
     }
 
     public function test_subscription_edit_subscriber()
     {
         $subscription = $this->createSubscription();
-        $subscriptionId = $subscription['data']['uid'];
 
-        $subscriber = $this->createSubscriber($subscriptionId);
-        $subscriberId = $subscriber['data']['uid'];
+        $subscription->subscribers->customer = [
+            'email' => 'customer@email.com',
+            'identification' => '36666666',
+            'name' => 'Customer Test',
+            'phone' => '12345678',
+        ];
+        $subscription->subscribers->reference = 'demo_user_321';
+        $subscription->subscribers->startDate = [
+            'day' => 1,
+            'month' => 1,
+        ];
 
-        $mobbex = $this->getDefaultObject();
+        $response = $subscription->subscribers->save();
 
-        $response = $mobbex->subscription->editSubscriber(
-            $subscriberId,
-            $subscriptionId,
-            [
-                'total' => 15,
-                'reference' => 'mi_referencia_2',
-            ]
-        );
+        $id = $subscription->subscribers->uid;
 
-        //TODO test create subscriber
-        $this->assertTrue($response['result']);
+        $subscriber = $subscription->subscribers->get($id);
+
+        $subscriber->reference = 'new_reference';
+        $subscriber->save();
+
+        $subscriber = $subscription->subscribers->get($id);
+
+        $this->assertTrue($subscriber->reference == 'new_reference');
     }
 
     public function test_subscription_suspend_subscriber()
     {
         $subscription = $this->createSubscription();
-        $subscriptionId = $subscription['data']['uid'];
 
-        $subscriber = $this->createSubscriber($subscriptionId);
-        $subscriberId = $subscriber['data']['uid'];
+        $subscription->subscribers->customer = [
+            'email' => 'customer@email.com',
+            'identification' => '36666666',
+            'name' => 'Customer Test',
+            'phone' => '12345678',
+        ];
+        $subscription->subscribers->reference = 'demo_user_321';
+        $subscription->subscribers->startDate = [
+            'day' => 1,
+            'month' => 1,
+        ];
 
-        $mobbex = $this->getDefaultObject();
+        $subscription->subscribers->save();
 
-        $response = $mobbex->subscription->suspendSubscriber(
-            $subscriberId,
-            $subscriptionId
-        );
-
+        $response = $subscription->subscribers->suspend();
         $this->assertTrue($response['result']);
+        $this->assertTrue($subscription->subscribers->subscriber['status'] == 'suspended');
     }
 
     public function test_subscription_move_subscriber()
     {
         $subscription1 = $this->createSubscription();
-        $subscription1Id = $subscription1['data']['uid'];
+
+        $subscription1->subscribers->customer = [
+            'email' => 'customer@email.com',
+            'identification' => '36666666',
+            'name' => 'Customer Test',
+            'phone' => '12345678',
+        ];
+        $subscription1->subscribers->reference = 'demo_user_321';
+        $subscription1->subscribers->startDate = [
+            'day' => 1,
+            'month' => 1,
+        ];
+
+        $subscription1->subscribers->save();
+
+        $sid = $subscription1->subscribers->uid;
 
         $subscription2 = $this->createSubscription();
-        $subscription2Id = $subscription2['data']['uid'];
 
-        $subscriber = $this->createSubscriber($subscription1Id);
-        $subscriberId = $subscriber['data']['uid'];
-
-        $mobbex = $this->getDefaultObject();
-
-        $response = $mobbex->subscription->moveSubscriber(
-            $subscriberId,
-            $subscription1Id,
-            $subscription2Id
-        );
+        $response = $subscription1->subscribers->move($subscription2->uid);
 
         //TODO test move subscriber
         $this->assertTrue($response['result']);
+
+        $subscription2->subscribers->get($sid);
+        $this->assertTrue($subscription2->subscribers->subscription['uid'] == $subscription2->uid);
     }
 
     /**
@@ -243,7 +276,11 @@ class SubscriptionsTest extends BaseTestCase
         $mobbex->subscription->webhook = 'https://webhook.com';
         $mobbex->subscription->return_url = 'https://returnurl.com';
 
-        return $mobbex->subscription->save();
+        $mobbex->subscription->save();
+
+        $mobbex->subscription->activate();
+
+        return $mobbex->subscription;
     }
 
     private function createSubscriber($id)

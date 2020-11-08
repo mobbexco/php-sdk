@@ -16,7 +16,9 @@
     },
     "require": {
         "guzzlehttp/guzzle": "~6.0",
-        "rakit/validation": "^1.2"
+        "rakit/validation": "^1.2",
+        "ext-curl": "*",
+      "ext-fileinfo": "*"
     },
     "autoload": {
         "psr-4": {

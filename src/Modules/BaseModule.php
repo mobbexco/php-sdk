@@ -163,7 +163,7 @@ class BaseModule
         );
     }
 
-    private function selfAssignData($body)
+    protected function selfAssignData($body)
     {
 
         if(!$body['result'])

@@ -58,7 +58,6 @@ class Mobbex
     {
         $this->apiKey = $apiKey;
     }
-
     /**
      * @return mixed
      */

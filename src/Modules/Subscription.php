@@ -6,12 +6,29 @@ namespace Adue\Mobbex\Modules;
 
 use Adue\Mobbex\MobbexResponse;
 
+//TODO validate that self uid is not null
 class Subscription extends BaseModule implements ModuleInterface
 {
 
     protected $uri = 'subscriptions';
     protected $validationRules = [
     ];
+
+    private $shared = [];
+
+    public function __get($name)
+    {
+        if($name != 'subscribers')
+            return parent::__get($name);
+
+        if(!is_null($this->uid)) {
+            if (!isset($this->shared['subscribers']))
+                $this->shared['subscribers'] = $this->subscribers();
+            return $this->shared['subscribers'];
+        }
+
+        return null;
+    }
 
     public function activate($id = false)
     {
@@ -23,6 +40,8 @@ class Subscription extends BaseModule implements ModuleInterface
             'body' => false,
             'uri' => $this->uri . '/' . $id . '/action/activate'
         ]);
+
+        $this->get($this->uid);
 
         return (new MobbexResponse($response))->getBody();
 
@@ -45,15 +64,11 @@ class Subscription extends BaseModule implements ModuleInterface
 
     }
 
-    public function subscribers($id)
+    public function subscribers($id = false)
     {
-        $response = $this->makeRequest([
-            'method' => 'GET',
-            'body' => false,
-            'uri' => $this->uri . '/' . $id . '/subscriber'
-        ]);
+        $id = !$id ? $this->uid : $id;
 
-        return (new MobbexResponse($response))->getBody();
+        return new Subscriber($this->mobbex, $id);
     }
 
 
