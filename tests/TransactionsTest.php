@@ -87,17 +87,19 @@ class TransactionsTest extends BaseTestCase
     {
         $mobbex = $this->getDefaultObject();
 
-        $mobbex->transaction->searchParams = [
-            'page' => 1,
-            'limit' => 10
-        ];
-        $mobbex->transaction->status = $mobbex::getStateCode('payed');
-        $mobbex->transaction->currency = 'ARS';
-        $mobbex->transaction->created_from = '2020-01-01';
-        $mobbex->transaction->created_to = date('Y-m-d');
-        $mobbex->transaction->context = 'plugin.value.checkout:web';
-
-        $response = $mobbex->transaction->search();
+        $response = $mobbex->transaction->search([
+            'pagination' => [
+                'page' => 1,
+                'limit' => 10
+            ],
+            'body' => [
+                'status' => $mobbex::getStateCode(200),
+                'currency' => 'ARS',
+                'created_from' => '2020-01-01',
+                'created_to' => date('Y-m-d'),
+                'context' => 'plugin.value.checkout:web',
+            ]
+        ]);
 
         $this->assertInstanceOf(MobbexResponse::class, $response);
 

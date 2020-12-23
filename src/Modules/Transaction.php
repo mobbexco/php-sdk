@@ -24,19 +24,30 @@ class Transaction extends BaseModule implements ModuleInterface
             'uri' => $this->uri20 . $this->reference
         ]);
 
-        return new MobbexResponse($response);
+        $body = (new MobbexResponse($response))->getBody();
+
+        if($body['result'])
+            return $this->createArrayOfObjects($body);
+
+        return $body['result'];
 
     }
 
-    public function search()
+    public function search($params)
     {
         $response = $this->makeRequest([
             'baseUrl' => 'https://api.mobbex.com/p/',
             'method' => 'GET',
-            'uri' => $this->uri10 . '?page=' . $this->searchParams['search'] . '&limit=' . $this->searchParams['limit']
+            'uri' => $this->uri10 . '?page=' . $params['pagination']['page'] . '&limit=' . $params['pagination']['limit'],
+            'body' => $params['body']
         ]);
 
-        return new MobbexResponse($response);
+        $body = (new MobbexResponse($response))->getBody();
+
+        if($body['result'])
+            return $this->createArrayOfObjects($body);
+
+        return $body['result'];
     }
 
     public function refund($id)
