@@ -4,6 +4,7 @@
 namespace Tests;
 
 
+use Adue\Mobbex\Mobbex;
 use Adue\Mobbex\MobbexResponse;
 use Adue\Mobbex\Modules\Transaction;
 
@@ -26,37 +27,31 @@ class TransactionsTest extends BaseTestCase
         $mobbex->transaction->reference = 'mi_referencia_0101';
         $response = $mobbex->transaction->all();
 
-        $this->assertInstanceOf(MobbexResponse::class, $response);
-
-        $responseBody = $response->getBody();
-
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        $this->assertIsArray($response);
     }
 
     //TODO test transaction search with more data and wrong data
     public function test_transaction_search()
     {
-        $responseBody = $this->getPayedTransactions();
+        $transactions = $this->getPayedTransactions();
 
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue($responseBody['result']);
+        $this->assertIsArray($transactions);
     }
 
     //TODO validate transaction result
     public function test_refund_transaction()
     {
         $mobbex = $this->getDefaultObject();
-        $responseBody = $this->getPayedTransactions();
+        $transactions = $this->getPayedTransactions();
 
-        $response = $mobbex->transaction->refund($responseBody["data"]["docs"][0]["uid"]);
+        $uid = $transactions[0]->uid;
 
-        $this->assertInstanceOf(MobbexResponse::class, $response);
+        $response = $mobbex->transaction->refund($uid);
 
-        $responseBody = $response->getBody();
+        $mobbex->transaction->getStatus($uid);
 
-        $this->assertArrayHasKey('result', $responseBody);
-        $this->assertTrue(!$responseBody['result']);
+        $this->assertTrue($mobbex->transaction->status == Mobbex::getStateCode('Declinada'));
+
     }
 
 
@@ -92,7 +87,7 @@ class TransactionsTest extends BaseTestCase
                 'page' => 1,
                 'limit' => 10
             ],
-            'body' => [
+            'form_params' => [
                 'status' => $mobbex::getStateCode(200),
                 'currency' => 'ARS',
                 'created_from' => '2020-01-01',
@@ -101,10 +96,7 @@ class TransactionsTest extends BaseTestCase
             ]
         ]);
 
-        $this->assertInstanceOf(MobbexResponse::class, $response);
-
-        $responseBody = $response->getBody();
-        return $responseBody;
+        return $response;
     }
 
 }

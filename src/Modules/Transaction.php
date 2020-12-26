@@ -83,9 +83,12 @@ class Transaction extends BaseModule implements ModuleInterface
                 'id' => $id
             ],
             'method' => 'POST',
-            'uri' => 'transactions/coupons/status/'
+            'uri' => $this->baseUrl20 . 'transactions/status'
         ]);
 
-        return new MobbexResponse($response);
+        $response = (new MobbexResponse($response))->getBody();
+
+        $this->selfAssignData($response['transactions'][0]);
+
     }
 }

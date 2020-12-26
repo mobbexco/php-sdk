@@ -176,6 +176,9 @@ class BaseModule
 
     protected function createArrayOfObjects($body)
     {
+        if(!isset($body['data']['docs']))
+            return [];
+
         $className = \get_class($this);
         foreach ($body['data']['docs'] as $op) {
             $operation = new $className($this->mobbex);
