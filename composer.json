@@ -1,5 +1,5 @@
 {
-    "name": "mobbexco/php-sdk",
+    "name": "adue/mobbex",
     "description": "A package to use and access Mobbex API",
     "type": "library",
     "license": "MIT",
@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Mobbexco\\Sdk\\": "src/"
+            "Adue\\Mobbex\\": "src/"
         }
     },
     "autoload-dev": {
