@@ -5,6 +5,7 @@ namespace Adue\Mobbex;
 
 use Adue\Mobbex\Exceptions\ModuleNotFound;
 use Adue\Mobbex\Modules\Checkout;
+use Adue\Mobbex\Modules\DevConnect;
 use Adue\Mobbex\Modules\Operation;
 use Adue\Mobbex\Modules\PaymentCode;
 use Adue\Mobbex\Modules\PaymentOrder;
@@ -28,6 +29,7 @@ class Mobbex
         'subscription' => Subscription::class,
         'transaction' => Transaction::class,
         'operation' => Operation::class,
+        'devConnect' => DevConnect::class,
     ];
 
     private $sharing = [];
@@ -37,10 +39,12 @@ class Mobbex
      * @param $apiKey
      * @param $accessToken
      */
-    public function __construct($apiKey, $accessToken)
+    public function __construct($apiKey, $accessToken = false)
     {
         $this->apiKey = $apiKey;
-        $this->accessToken = $accessToken;
+
+        if($accessToken)
+            $this->accessToken = $accessToken;
     }
 
     /**
