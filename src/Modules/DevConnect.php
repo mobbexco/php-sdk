@@ -34,7 +34,11 @@ class DevConnect extends BaseModule
     {
         $id = $connectId ? $connectId : $this->id;
         $response = $this->makeRequest([
-            'uri' => $this->uri . '/' . $id
+            'method' => 'GET',
+            'uri' => $this->uri . '/' . $id  . '/credentials',
+            'data' => [
+                'Connect ID' => $id
+            ]
         ]);
 
         $body = (new MobbexResponse($response))->getBody();
