@@ -30,10 +30,11 @@ class DevConnect extends BaseModule
         $this->selfAssignData($body);
     }
 
-    public function getCredentials()
+    public function getCredentials($connectId = false)
     {
+        $id = $connectId ? $connectId : $this->id;
         $response = $this->makeRequest([
-            'uri' => $this->uri . '/' . $this->id
+            'uri' => $this->uri . '/' . $id
         ]);
 
         $body = (new MobbexResponse($response))->getBody();
