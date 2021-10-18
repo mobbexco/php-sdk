@@ -15,7 +15,7 @@
         "nunomaduro/phpinsights": "^1.14"
     },
     "require": {
-        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/guzzle": "~7.0",
         "rakit/validation": "^1.2",
         "ext-curl": "*",
       "ext-fileinfo": "*"
