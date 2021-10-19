@@ -29,6 +29,19 @@ class Operation extends BaseModule implements ModuleInterface
         return $body['result'];
     }
 
+    public function release($uid)
+    {
+
+        $response = $this->makeRequest([
+            'method' => 'GET',
+            'uri' => $this->uri . $uid . '/release'
+        ]);
+
+        $body = (new MobbexResponse($response))->getBody();
+
+        return $body['result'];
+    }
+
 
     public function refund($id)
     {
