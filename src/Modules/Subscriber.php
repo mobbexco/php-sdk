@@ -40,6 +40,18 @@ class Subscriber extends BaseModule
         return $this;
     }
 
+    public function execute()
+    {
+        $response = $this->makeRequest([
+            'method' => 'GET',
+            'uri' => $this->uri . '/' . $this->uid . '/execution'
+        ]);
+
+        $this->get($this->uid);
+
+        return (new MobbexResponse($response))->getBody();
+    }
+
     public function activate()
     {
 
