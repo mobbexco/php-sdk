@@ -40,6 +40,20 @@ class Subscriber extends BaseModule
         return $this;
     }
 
+    public function activate()
+    {
+
+        $response = $this->makeRequest([
+            'method' => 'GET',
+            'body' => false,
+            'uri' => $this->uri . '/' . $this->uid . '/action/activate'
+        ]);
+
+        $this->get($this->uid);
+
+        return (new MobbexResponse($response))->getBody();
+    }
+
     public function suspend()
     {
 
@@ -64,6 +78,19 @@ class Subscriber extends BaseModule
         ]);
 
         $this->attributes = [];
+
+        return (new MobbexResponse($response))->getBody();
+    }
+
+    public function reschedule($date)
+    {
+        $response = $this->makeRequest([
+            'method' => 'POST',
+            'body' => json_encode($date),
+            'uri' => $this->uri . '/' . $this->uid . '/action/reschedule'
+        ]);
+
+        $this->get($this->uid);
 
         return (new MobbexResponse($response))->getBody();
     }

@@ -289,6 +289,47 @@ class SubscriptionsTest extends BaseTestCase
         $this->assertTrue($response['result']);
     }
 
+    public function test_subscription_reschedule_subscriber() {
+        $mobbex = $this->getDefaultObject();
+        $mobbex->subscription->total = 100;
+        $mobbex->subscription->currency = 'ARS';
+        $mobbex->subscription->type = 'dynamic';
+        $mobbex->subscription->name = 'Suscription name';
+        $mobbex->subscription->description = 'Suscription description';
+        $mobbex->subscription->interval = '1m';
+        $mobbex->subscription->trial = 0;
+        $mobbex->subscription->limit = 0;
+        $mobbex->subscription->webhook = 'https://webhook.com';
+        $mobbex->subscription->return_url = 'https://returnurl.com';
+
+        $mobbex->subscription->save();
+
+        $mobbex->subscription->activate();
+
+        $mobbex->subscription->subscribers->customer = [
+            'email' => 'customer@email.com',
+            'identification' => '36666666',
+            'name' => 'Customer Test',
+            'phone' => '12345678',
+        ];
+        $mobbex->subscription->subscribers->reference = 'demo_user_321';
+        $mobbex->subscription->subscribers->startDate = [
+            'day' => 1,
+            'month' => 1,
+        ];
+
+        $mobbex->subscription->subscribers->save();
+
+        $mobbex->subscription->subscribers->activate();
+
+        $response = $mobbex->subscription->subscribers->reschedule([
+            'day' => 2,
+            'month' => 15,
+        ]);
+
+        $this->assertTrue($response['result']);
+    }
+
     /**
      * Private functions
     */
