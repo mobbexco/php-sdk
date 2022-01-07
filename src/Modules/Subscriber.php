@@ -42,6 +42,7 @@ class Subscriber extends BaseModule
 
     public function execute()
     {
+
         $response = $this->makeRequest([
             'method' => 'GET',
             'uri' => $this->uri . '/' . $this->uid . '/execution'

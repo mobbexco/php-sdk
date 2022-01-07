@@ -84,4 +84,30 @@ class Subscription extends BaseModule implements ModuleInterface
         return (new MobbexResponse($response))->getBody();
     }
 
+    public function period($subscriberUid, $id = false)
+    {
+        $id = !$id ? $this->uid : $id;
+
+        $response = $this->makeRequest([
+            'method' => 'GET',
+            'body' => false,
+            'uri' => $this->uri . '/' . $id . '/subscriber/'.$subscriberUid.'/action/period'
+        ]);
+
+        return (new MobbexResponse($response))->getBody();
+    }
+
+    public function retry($executionId, $subscriberUid, $id = false)
+    {
+        $id = !$id ? $this->uid : $id;
+
+        $response = $this->makeRequest([
+            'method' => 'GET',
+            'body' => false,
+            'uri' => $this->uri . '/' . $id . '/subscriber/'.$subscriberUid.'/execution/'.$executionId.'/action/retry'
+        ]);
+
+        return (new MobbexResponse($response))->getBody();
+    }
+
 }
