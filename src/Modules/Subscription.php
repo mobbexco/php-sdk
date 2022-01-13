@@ -116,7 +116,7 @@ class Subscription extends BaseModule implements ModuleInterface
 
         $response = $this->makeRequest([
             'method' => 'POST',
-            'body' => json_encode($date),
+            'body' => json_encode(['startDate' => $date]),
             'uri' => $this->uri . '/' . $id . '/subscriber/'.$subscriberUid.'/action/reschedule'
         ]);
 
