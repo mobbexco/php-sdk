@@ -110,4 +110,17 @@ class Subscription extends BaseModule implements ModuleInterface
         return (new MobbexResponse($response))->getBody();
     }
 
+    public function reschedule($subscriberUid, $date, $id = false)
+    {
+        $id = !$id ? $this->uid : $id;
+
+        $response = $this->makeRequest([
+            'method' => 'POST',
+            'body' => json_encode($date),
+            'uri' => $this->uri . '/' . $id . '/subscriber/'.$subscriberUid.'/action/reschedule'
+        ]);
+
+        return (new MobbexResponse($response))->getBody();
+    }
+
 }
