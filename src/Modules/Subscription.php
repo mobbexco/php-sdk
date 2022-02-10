@@ -123,4 +123,20 @@ class Subscription extends BaseModule implements ModuleInterface
         return (new MobbexResponse($response))->getBody();
     }
 
+    public function search($text, $page = 0, $id = false)
+    {
+        $id = !$id ? $this->uid : $id;
+
+        //var_dump($this->uri . '/' . $id . '/subscriber/');die;
+
+        $response = $this->makeRequest([
+            'method' => 'GET',
+            //'body' => json_encode(['page' => $page, 'search' => $text]),
+            'body' => false,
+            'uri' => $this->uri . '/' . $id . '/subscriber/?page='.$page.'&search='.$text
+        ]);
+
+        return (new MobbexResponse($response))->getBody();
+    }
+
 }

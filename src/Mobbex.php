@@ -10,6 +10,7 @@ use Adue\Mobbex\Modules\Operation;
 use Adue\Mobbex\Modules\PaymentCode;
 use Adue\Mobbex\Modules\PaymentOrder;
 use Adue\Mobbex\Modules\Sources;
+use Adue\Mobbex\Modules\Subscriber;
 use Adue\Mobbex\Modules\Subscription;
 use Adue\Mobbex\Modules\Transaction;
 use Adue\Mobbex\Traits\TransactionStatesTrait;
@@ -27,6 +28,7 @@ class Mobbex
         'sources' => Sources::class,
         'paymentCode' => PaymentCode::class,
         'subscription' => Subscription::class,
+        'subscriber' => Subscriber::class,
         'transaction' => Transaction::class,
         'operation' => Operation::class,
         'devConnect' => DevConnect::class,

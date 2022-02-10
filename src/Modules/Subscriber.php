@@ -108,6 +108,19 @@ class Subscriber extends BaseModule
         return (new MobbexResponse($response))->getBody();
     }
 
+    public function search($s, $page = 0)
+    {
+        $response = $this->makeRequest([
+            'method' => 'GET',
+            'body' => false,
+            'uri' => 'subscriptions/subscriber?page='.$page.'&search='.$s
+        ]);
+
+        $this->attributes = [];
+
+        return (new MobbexResponse($response))->getBody();
+    }
+
     protected function createArrayOfObjects($body)
     {
         $className = \get_class($this);
