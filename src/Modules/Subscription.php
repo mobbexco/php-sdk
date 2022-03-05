@@ -165,4 +165,15 @@ class Subscription extends BaseModule implements ModuleInterface
 
         return (new MobbexResponse($response))->getBody();
     }
+
+    public function activateSubscriber($subscriberId)
+    {
+        $response = $this->makeRequest([
+            'method' => 'POST',
+            'body' => false,
+            'uri' => $this->uri . '/' . $this->uid . '/subscriber/'.$subscriberId.'/action/activate'
+        ]);
+
+        return (new MobbexResponse($response))->getBody();
+    }
 }
