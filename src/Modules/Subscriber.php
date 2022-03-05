@@ -81,13 +81,13 @@ class Subscriber extends BaseModule
         return (new MobbexResponse($response))->getBody();
     }
 
-    public function move($uid)
+    public function move($subscriberId, $newSubscriptionId)
     {
 
         $response = $this->makeRequest([
             'method' => 'GET',
-            'body' => json_encode(['sid' => $uid]),
-            'uri' => $this->uri . '/' . $this->uid . '/action/move'
+            'body' => json_encode(['sid' => $newSubscriptionId]),
+            'uri' => $this->uri . '/' . $subscriberId . '/action/move'
         ]);
 
         $this->attributes = [];
