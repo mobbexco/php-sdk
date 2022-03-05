@@ -151,4 +151,18 @@ class Subscription extends BaseModule implements ModuleInterface
 
         return (new MobbexResponse($response))->getBody();
     }
+
+    public function move($subscriberId, $newSubscriptionId)
+    {
+
+        $response = $this->makeRequest([
+            'method' => 'GET',
+            'body' => json_encode(['sid' => $newSubscriptionId]),
+            'uri' => $this->uri . '/' . $subscriberId . '/action/move'
+        ]);
+
+        $this->attributes = [];
+
+        return (new MobbexResponse($response))->getBody();
+    }
 }
