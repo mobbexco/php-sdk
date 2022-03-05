@@ -158,7 +158,7 @@ class Subscription extends BaseModule implements ModuleInterface
         $response = $this->makeRequest([
             'method' => 'GET',
             'body' => json_encode(['sid' => $newSubscriptionId]),
-            'uri' => $this->uri . '/' . $subscriberId . '/action/move'
+            'uri' => $this->uri . '/' . $this->uid . '/subscriber/'. $subscriberId . '/action/move'
         ]);
 
         $this->attributes = [];
