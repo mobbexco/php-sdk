@@ -53,8 +53,8 @@ class Operation extends BaseModule implements ModuleInterface
                 'x-api-key' => $this->mobbex->getApiKey()
             ],
             'body' => false,
-            'method' => 'GET',
-            'uri' => $this->uri . $id . '/status'
+            'method' => 'POST',
+            'uri' => $this->uri . $id . '/refund'
         ]);
 
         return (new MobbexResponse($response))->getBody();
